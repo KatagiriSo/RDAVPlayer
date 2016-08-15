@@ -3,7 +3,9 @@
 //  RDAVPlayer
 //
 //  Created by 片桐奏羽 on 2016/08/10.
-//  Copyright © 2016年 rodhosSoft. All rights reserved.
+//  Copyright © 2016年 rodhosSoft.
+//  This software is released under the MIT License.
+//  http://opensource.org/licenses/mit-license.php
 //
 
 import UIKit

@@ -14,6 +14,13 @@
 		32426D011D5ABFE100F0DC05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32426CFF1D5ABFE100F0DC05 /* LaunchScreen.storyboard */; };
 		32426D0C1D5ABFE100F0DC05 /* RDAVPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D0B1D5ABFE100F0DC05 /* RDAVPlayerTests.swift */; };
 		32426D171D5ABFE100F0DC05 /* RDAVPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D161D5ABFE100F0DC05 /* RDAVPlayerUITests.swift */; };
+		32426D251D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */; };
+		32426D261D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */; };
+		32426D271D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */; };
+		32426D291D5AD10B00F0DC05 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32426D281D5AD10B00F0DC05 /* AVFoundation.framework */; };
+		32426D2B1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
+		32426D2C1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
+		32426D2D1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +54,9 @@
 		32426D121D5ABFE100F0DC05 /* RDAVPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RDAVPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32426D161D5ABFE100F0DC05 /* RDAVPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RDAVPlayerUITests.swift; sourceTree = "<group>"; };
 		32426D181D5ABFE100F0DC05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDAVPlayer.swift; sourceTree = "<group>"; };
+		32426D281D5AD10B00F0DC05 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		32426D2A1D5B037D00F0DC05 /* samplemovie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = samplemovie.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32426D291D5AD10B00F0DC05 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +88,7 @@
 		32426CEA1D5ABFE000F0DC05 = {
 			isa = PBXGroup;
 			children = (
+				32426D281D5AD10B00F0DC05 /* AVFoundation.framework */,
 				32426CF51D5ABFE000F0DC05 /* RDAVPlayer */,
 				32426D0A1D5ABFE100F0DC05 /* RDAVPlayerTests */,
 				32426D151D5ABFE100F0DC05 /* RDAVPlayerUITests */,
@@ -99,10 +111,12 @@
 			children = (
 				32426CF61D5ABFE000F0DC05 /* AppDelegate.swift */,
 				32426CF81D5ABFE000F0DC05 /* ViewController.swift */,
+				32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */,
 				32426CFA1D5ABFE100F0DC05 /* Main.storyboard */,
 				32426CFD1D5ABFE100F0DC05 /* Assets.xcassets */,
 				32426CFF1D5ABFE100F0DC05 /* LaunchScreen.storyboard */,
 				32426D021D5ABFE100F0DC05 /* Info.plist */,
+				32426D2A1D5B037D00F0DC05 /* samplemovie.mov */,
 			);
 			path = RDAVPlayer;
 			sourceTree = "<group>";
@@ -230,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32426D011D5ABFE100F0DC05 /* LaunchScreen.storyboard in Resources */,
+				32426D2B1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
 				32426CFE1D5ABFE100F0DC05 /* Assets.xcassets in Resources */,
 				32426CFC1D5ABFE100F0DC05 /* Main.storyboard in Resources */,
 			);
@@ -239,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32426D2C1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +262,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32426D2D1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32426CF91D5ABFE000F0DC05 /* ViewController.swift in Sources */,
+				32426D251D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
 				32426CF71D5ABFE000F0DC05 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32426D0C1D5ABFE100F0DC05 /* RDAVPlayerTests.swift in Sources */,
+				32426D261D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32426D171D5ABFE100F0DC05 /* RDAVPlayerUITests.swift in Sources */,
+				32426D271D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +502,7 @@
 				32426D1D1D5ABFE100F0DC05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		32426D1E1D5ABFE100F0DC05 /* Build configuration list for PBXNativeTarget "RDAVPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +511,7 @@
 				32426D201D5ABFE100F0DC05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		32426D211D5ABFE100F0DC05 /* Build configuration list for PBXNativeTarget "RDAVPlayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -498,6 +520,7 @@
 				32426D231D5ABFE100F0DC05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
