@@ -18,9 +18,9 @@
 		32426D261D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */; };
 		32426D271D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */; };
 		32426D291D5AD10B00F0DC05 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32426D281D5AD10B00F0DC05 /* AVFoundation.framework */; };
-		32426D2B1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
-		32426D2C1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
-		32426D2D1D5B037D00F0DC05 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 32426D2A1D5B037D00F0DC05 /* samplemovie.mov */; };
+		324FE6FE1D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
+		324FE6FF1D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
+		324FE7001D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +56,7 @@
 		32426D181D5ABFE100F0DC05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDAVPlayer.swift; sourceTree = "<group>"; };
 		32426D281D5AD10B00F0DC05 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		32426D2A1D5B037D00F0DC05 /* samplemovie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = samplemovie.mov; sourceTree = "<group>"; };
+		324FE6FD1D61559A00EC0A2E /* samplemovie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = samplemovie.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +109,7 @@
 		32426CF51D5ABFE000F0DC05 /* RDAVPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				324FE6FD1D61559A00EC0A2E /* samplemovie.mov */,
 				32426CF61D5ABFE000F0DC05 /* AppDelegate.swift */,
 				32426CF81D5ABFE000F0DC05 /* ViewController.swift */,
 				32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */,
@@ -116,7 +117,6 @@
 				32426CFD1D5ABFE100F0DC05 /* Assets.xcassets */,
 				32426CFF1D5ABFE100F0DC05 /* LaunchScreen.storyboard */,
 				32426D021D5ABFE100F0DC05 /* Info.plist */,
-				32426D2A1D5B037D00F0DC05 /* samplemovie.mov */,
 			);
 			path = RDAVPlayer;
 			sourceTree = "<group>";
@@ -244,7 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32426D011D5ABFE100F0DC05 /* LaunchScreen.storyboard in Resources */,
-				32426D2B1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
+				324FE6FE1D61559A00EC0A2E /* samplemovie.mov in Resources */,
 				32426CFE1D5ABFE100F0DC05 /* Assets.xcassets in Resources */,
 				32426CFC1D5ABFE100F0DC05 /* Main.storyboard in Resources */,
 			);
@@ -254,7 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32426D2C1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
+				324FE6FF1D61559A00EC0A2E /* samplemovie.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +262,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32426D2D1D5B037D00F0DC05 /* samplemovie.mov in Resources */,
+				324FE7001D61559A00EC0A2E /* samplemovie.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +369,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -408,7 +408,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

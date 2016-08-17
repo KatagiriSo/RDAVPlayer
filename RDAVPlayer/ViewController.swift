@@ -11,34 +11,68 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController {
+class RDPlayerView : UIView, RDAVPlayerViewAPI
+{
+    @IBOutlet weak var consol: UITextView!
+    @IBOutlet weak var controllerView: UIView!
+    @IBOutlet weak var screenView: UIView!
     
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
+    func setup()
+    {
+        
     }
     
+    func updatePlay()
+    {
+        print("updatePlay")
+    }
+    
+    func updatePause()
+    {
+        print("updatePause")
+    }
+    
+    func updateSeekValue()
+    {
+        print("updateSeekValue")
+    }
+}
 
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
+class RDAVPlayerViewController : UIViewController {
+    
+    @IBOutlet weak var playerView: RDPlayerView!
+    
+    
+    var playerPresenter : RDAVPlayerPresenter!
+    var playerLayer : AVPlayerLayer!
+    
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        playerLayer.frame.size = size
     }
     
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-        
     }
     
-    
-    private func setup() {
-        let mvc = RDAVPlayer()
-        mvc.view.frame = self.view.bounds
-        mvc.view.backgroundColor = UIColor.blackColor()
-        
-        self.view.addSubview(mvc.view)
-        self.addChildViewController(mvc)
+    override func viewDidLoad() {
+        self.playerPresenter = RDAVPlayerPresenter(view: self.playerView)
+        self.setup()
     }
     
+    func setup() {
+        playerLayer = RDAVPlayer.shareInstance.playerLayer
+        playerLayer.frame = self.view.bounds
+        playerView.screenView.layer.addSublayer(playerLayer)
+    }
+    
+    @IBAction func playButtonPushed(sender: UIButton) {
+        playerPresenter.notify(RDAVPlayerPresenterEvent.NotifyPlayButtonPushed)
+    }
+    
+    @IBAction func seekValueChanged(sender: UISlider) {
+        playerPresenter.notify(RDAVPlayerPresenterEvent.NotifySeekValueChanged(value: sender.value))
+    }
 }
 
