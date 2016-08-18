@@ -67,7 +67,7 @@ class RDAVPlayerPresenter : RDAVPlayerEventReceiver {
 }
 
 /// control to AVPlayer
-class RDAVPlayer : NSObject, RDAVPlayerAPI {
+class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
     
     var playerLayer:AVPlayerLayer!
     var player:AVPlayer! {
@@ -79,6 +79,9 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI {
             
             self.player.addObserver(self, forKeyPath: "status", options: .New, context: nil)
             self.player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
+            // self.player.addObserver(self, forKeyPath: "timeControlStatus", options: .New, context: nil) new Paused,WaitingToPlayAtSpecifiedRate,Playing
+            // self.player.reasonForWaitingToPlay
+            // AVPlayer.automaticallyWaitsToMinimizeStalling = true ios 10-
 
         }
     }
@@ -116,20 +119,47 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI {
             print("status = \(self.player.status.rawValue)")
         case "rate":
             print("rate = \(self.player.rate)")
+            print("duration = \(self.player.currentItem?.duration.seconds)")
+            print("currentTime = \(self.player.currentItem?.currentTime().seconds)")
+
         default:
-            break
+            print("\(key)")
         }
     }
     
+
     func notify(notification:NSNotification)->() {
         print("\(notification.name)")
     }
     
     
     func setTimeObserver() -> Bool {
+        print("setTimeObserver")
+        
         
         let periodblock = {(time:CMTime) in
-            CMTimeShow(time)
+            print("period == \(time.seconds) ==")
+            
+            if let item = self.player.currentItem {
+                if let log = item.accessLog() {
+                    if let lastevent = log.events.last {
+                        let lastObservedBitrate = lastevent.observedBitrate
+                        print("lastObservedBitrate \(lastObservedBitrate)")
+                    }
+                }
+            }
+            
+            // loaded time ranges
+            if let loadedTimeRanges : [NSValue]  = self.player.currentItem?.loadedTimeRanges {
+                var str = ""
+                for v : NSValue in loadedTimeRanges {
+                    let timeRange : CMTimeRange = v.CMTimeRangeValue
+                    str = str + "(s:\(timeRange.start.seconds), du:\(timeRange.duration.seconds))"
+                }
+                print("loadedTimeRange:\(str)")
+            }
+            
+            print("period == == ==")
         }
         
         let boundaryBlock = {() in
@@ -186,10 +216,31 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI {
     
     
     func setupPlayer(url:NSURL) {
-        let item = AVPlayerItem(URL: url)
+        let asset : AVURLAsset = AVURLAsset(URL: url)
+        asset.loadValuesAsynchronouslyForKeys(["duration"], completionHandler: nil)
+        if #available(iOS 9.0, *) {
+            asset.resourceLoader.preloadsEligibleContentKeys = true
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        asset.resourceLoader.setDelegate(self, queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
+        
+        let item : AVPlayerItem = AVPlayerItem(asset: asset)
+//        item.preferredPeakBitRate = 2000
+
+        item.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .New, context: nil)
+        item.addObserver(self, forKeyPath: "playbackBufferFull", options: .New, context: nil)
+        item.addObserver(self, forKeyPath: "playbackBufferEmpty", options: .New, context: nil)
         player = AVPlayer(playerItem: item)
         playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        
+        setTimeObserver()
+
+        
+        // player.rate app request rate
+        // item.timebase.rate the rate at which playback is acturally occuring
     }
     
     
@@ -203,10 +254,94 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI {
     }
     
     func removeObserver() {
+        
+        self.player.currentItem?.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
+        self.player.currentItem?.removeObserver(self, forKeyPath: "playbackBufferFull")
+        self.player.currentItem?.removeObserver(self, forKeyPath: "playbackBufferEmpty")
+        
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     
+    // delegate AVAssetResourceLoaderDelegate
     
+    func resourceLoader(resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        /*
+         Delegates receive this message when assistance is required of the application to load a resource. For example, this method is invoked to load decryption keys that have been specified using custom URL schemes.
+         If the result is YES, the resource loader expects invocation, either subsequently or immediately, of either -[AVAssetResourceLoadingRequest finishLoading] or -[AVAssetResourceLoadingRequest finishLoadingWithError:]. If you intend to finish loading the resource after your handling of this message returns, you must retain the instance of AVAssetResourceLoadingRequest until after loading is finished.
+         If the result is NO, the resource loader treats the loading of the resource as having failed.
+         Note that if the delegate's implementation of -resourceLoader:shouldWaitForLoadingOfRequestedResource: returns YES without finishing the loading request immediately, it may be invoked again with another loading request before the prior request is finished; therefore in such cases the delegate should be prepared to manage multiple loading requests.
+         */
+        print("shouldWaitForLoadingOfRequestedResource\(loadingRequest.description)")
+        show(loadingRequest)
+        
+        return true
+    }
+    
+    func show(loadingRequest:AVAssetResourceLoadingRequest) {
+        print(" \(loadingRequest.request), \(loadingRequest.cancelled), \(loadingRequest.finished)")
+        
+        if let inforeq:AVAssetResourceLoadingContentInformationRequest = loadingRequest.contentInformationRequest {
+            print("AVAssetResourceLoadingContentInformationRequest\(inforeq.contentType), \(inforeq.contentType), \(inforeq.byteRangeAccessSupported),\(inforeq.renewalDate)")
+            
+        }
+    }
+    
+    func resourceLoader(resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool
+    {
+        /*
+         Delegates receive this message when assistance is required of the application to renew a resource previously loaded by resourceLoader:shouldWaitForLoadingOfRequestedResource:. For example, this method is invoked to renew decryption keys that require renewal, as indicated in a response to a prior invocation of resourceLoader:shouldWaitForLoadingOfRequestedResource:.
+         If the result is YES, the resource loader expects invocation, either subsequently or immediately, of either -[AVAssetResourceRenewalRequest finishLoading] or -[AVAssetResourceRenewalRequest finishLoadingWithError:]. If you intend to finish loading the resource after your handling of this message returns, you must retain the instance of AVAssetResourceRenewalRequest until after loading is finished.
+         If the result is NO, the resource loader treats the loading of the resource as having failed.
+         Note that if the delegate's implementation of -resourceLoader:shouldWaitForRenewalOfRequestedResource: returns YES without finishing the loading request immediately, it may be invoked again with another loading request before the prior request is finished; therefore in such cases the delegate should be prepared to manage multiple loading requests.
+         */
+        print("shouldWaitForRenewalOfRequestedResource\(renewalRequest.description)")
+        show(renewalRequest)
+        
+        return true
+    }
+    
+
+    func resourceLoader(resourceLoader: AVAssetResourceLoader, didCancelLoadingRequest loadingRequest: AVAssetResourceLoadingRequest) {
+        /*
+              @discussion	Previously issued loading requests can be cancelled when data from the resource is no longer required or when a loading request is superseded by new requests for data from the same resource. For example, if to complete a seek operation it becomes necessary to load a range of bytes that's different from a range previously requested, the prior request may be cancelled while the delegate is still handling it.
+ */
+        print("didCancelLoadingRequest\(loadingRequest.description)")
+        show(loadingRequest)
+    }
+    
+    func showAuth(authenticationChallenge:NSURLAuthenticationChallenge) {
+        print("\(authenticationChallenge.protectionSpace)")
+        print("\(authenticationChallenge.proposedCredential)")
+        print("\(authenticationChallenge.failureResponse)")
+        print("\(authenticationChallenge.error)")
+        print("\(authenticationChallenge.previousFailureCount)")
+        print("\(authenticationChallenge.sender)")
+    }
+    
+    /*!
+     @method 		resourceLoader:shouldWaitForResponseToAuthenticationChallenge:
+     @abstract		Invoked when assistance is required of the application to respond to an authentication challenge.
+     @param 		resourceLoader
+     The instance of AVAssetResourceLoader asking for help with an authentication challenge.
+     @param 		authenticationChallenge
+     An instance of NSURLAuthenticationChallenge.
+     @discussion
+     Delegates receive this message when assistance is required of the application to respond to an authentication challenge.
+     If the result is YES, the resource loader expects you to send an appropriate response, either subsequently or immediately, to the NSURLAuthenticationChallenge's sender, i.e. [authenticationChallenge sender], via use of one of the messages defined in the NSURLAuthenticationChallengeSender protocol (see NSAuthenticationChallenge.h). If you intend to respond to the authentication challenge after your handling of -resourceLoader:shouldWaitForResponseToAuthenticationChallenge: returns, you must retain the instance of NSURLAuthenticationChallenge until after your response has been made.
+     */
+    func resourceLoader(resourceLoader: AVAssetResourceLoader, shouldWaitForResponseToAuthenticationChallenge authenticationChallenge: NSURLAuthenticationChallenge) -> Bool
+    {
+        print("shouldWaitForResponseToAuthenticationChallenge\(authenticationChallenge.description)")
+        showAuth(authenticationChallenge)
+        
+        return true
+    }
+    
+    func resourceLoader(resourceLoader: AVAssetResourceLoader, didCancelAuthenticationChallenge authenticationChallenge: NSURLAuthenticationChallenge)
+    {
+        print("didCancelAuthenticationChallenge\(authenticationChallenge.description)")
+        showAuth(authenticationChallenge)
+    }
 }
 
