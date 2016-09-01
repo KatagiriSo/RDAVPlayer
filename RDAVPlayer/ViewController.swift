@@ -16,9 +16,7 @@ import AVFoundation
 
 class RDAVPlayerViewController : UIViewController {
     
-    @IBOutlet weak var playerView: RDPlayerView!
-    
-    
+    @IBOutlet weak var playerView: RDPlayerView!    
     var playerPresenter : RDAVPlayerPresenter!
     var playerLayer : AVPlayerLayer!
     

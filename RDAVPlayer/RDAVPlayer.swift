@@ -15,15 +15,18 @@ import UIKit
 
 protocol RDAVPlayerAPI {
     func setupPlayer(url:NSURL)
+    func addObserver(observer:RDAVPlayerEventReceiver)
     func play()
     func seek(value:Float)
 }
 
+private var kCurrentItemContext : Int = 0
 
 
 /// control to AVPlayer
 class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
     
+    var eventReceiver : RDAVPlayerEventReceiver? = nil
     var playerLayer:AVPlayerLayer!
     var player:AVPlayer! {
         didSet(oldplayer) {
@@ -52,33 +55,50 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
     }
     
     func setupObserver() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemTimeJumpedNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemFailedToPlayToEndTimeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemPlaybackStalledNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemNewAccessLogEntryNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RDAVPlayer.notify(_:)), name: AVPlayerItemNewErrorLogEntryNotification, object: nil)
-        // AVPlayerItemFailedToPlayToEndTimeErrorKey
-
+        
+        func setupObserver(name:String,selector:Selector) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: name, object: nil)
+        }
+        
+        setupObserver(AVPlayerItemTimeJumpedNotification, selector: #selector(RDAVPlayer.notify(_:)));
+        setupObserver(AVPlayerItemDidPlayToEndTimeNotification, selector: #selector(RDAVPlayer.notify(_:)));
+        setupObserver(AVPlayerItemFailedToPlayToEndTimeNotification, selector: #selector(RDAVPlayer.notify(_:)));
+        setupObserver(AVPlayerItemPlaybackStalledNotification, selector: #selector(RDAVPlayer.notify(_:)));
+        setupObserver(AVPlayerItemNewAccessLogEntryNotification, selector: #selector(RDAVPlayer.notify(_:)));
+        setupObserver(AVPlayerItemNewErrorLogEntryNotification, selector: #selector(RDAVPlayer.notify(_:)));
+    }
+    
+    func addObserver(observer: RDAVPlayerEventReceiver) {
+        self.eventReceiver = observer
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-//        print("observeValueForKeyPath:\(keyPath) ofObject \(object) change:\(change), context:\(context)")
+        //        print("observeValueForKeyPath:\(keyPath) ofObject \(object) change:\(change), context:\(context)")
         
         guard let key:String = keyPath else {
             return
         }
         
-        switch key {
-        case "status":
-            print("status = \(self.player.status.rawValue)")
-        case "rate":
-            print("rate = \(self.player.rate)")
-            print("duration = \(self.player.currentItem?.duration.seconds)")
-            print("currentTime = \(self.player.currentItem?.currentTime().seconds)")
-
-        default:
-            print("\(key)")
+        if context == &kCurrentItemContext {
+            switch key {
+            case "rate":
+                print("item rate = \(change?[NSKeyValueChangeOldKey]) -> \(change?[NSKeyValueChangeNewKey])")
+                print("duration = \(self.player.currentItem?.duration.seconds)")
+                print("currentTime = \(self.player.currentItem?.currentTime().seconds)")
+            default:
+                print("\(key)")
+            }
+        } else {
+            switch key {
+            case "status":
+                print("status = \(self.player.status.rawValue)")
+            case "rate":
+                print("player rate = \(change?[NSKeyValueChangeOldKey]) -> \(change?[NSKeyValueChangeNewKey])")
+                print("duration = \(self.player.currentItem?.duration.seconds)")
+                print("currentTime = \(self.player.currentItem?.currentTime().seconds)")
+            default:
+                print("\(key)")
+            }
         }
     }
     
@@ -87,38 +107,31 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         print("\(notification.name)")
     }
     
+    var periodCount = 0
     
     func setTimeObserver() -> Bool {
         print("setTimeObserver")
         
         
         let periodblock = {(time:CMTime) in
-            print("period == \(time.seconds) ==")
             
-            if let item = self.player.currentItem {
-                if let log = item.accessLog() {
-                    if let lastevent = log.events.last {
-                        let lastObservedBitrate = lastevent.observedBitrate
-                        print("lastObservedBitrate \(lastObservedBitrate)")
-                    }
-                }
+            print("period \(time.seconds)")            
+            
+            if let item:AVPlayerItem = self.player.currentItem {
+                self.eventReceiver?.notify(RDAVPlayerPresenterEvent.NotifyUpdateTime(item: item))
             }
             
-            // loaded time ranges
-            if let loadedTimeRanges : [NSValue]  = self.player.currentItem?.loadedTimeRanges {
-                var str = ""
-                for v : NSValue in loadedTimeRanges {
-                    let timeRange : CMTimeRange = v.CMTimeRangeValue
-                    str = str + "(s:\(timeRange.start.seconds), du:\(timeRange.duration.seconds))"
-                }
-                print("loadedTimeRange:\(str)")
+            if self.periodCount % 5 == 0{
+            
+                self.showLog()
             }
             
-            print("period == == ==")
+            self.periodCount = self.periodCount + 1
+            
         }
         
         let boundaryBlock = {() in
-            print("end")
+            print("boundary observed")
         }
         
         self.periodTimeObserverToken =  player.addPeriodicTimeObserverForInterval(CMTimeMake(100, 100),
@@ -142,7 +155,6 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         return true
     }
     
-
     
     func play() {
         player.play()
@@ -168,8 +180,6 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         })
     }
     
-    
-    
     func setupPlayer(url:NSURL) {
         let asset : AVURLAsset = AVURLAsset(URL: url)
         asset.loadValuesAsynchronouslyForKeys(["duration"], completionHandler: nil)
@@ -183,13 +193,22 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         
         let item : AVPlayerItem = AVPlayerItem(asset: asset)
 //        item.preferredPeakBitRate = 2000
-
-        item.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .New, context: nil)
-        item.addObserver(self, forKeyPath: "playbackBufferFull", options: .New, context: nil)
-        item.addObserver(self, forKeyPath: "playbackBufferEmpty", options: .New, context: nil)
+        
+        if #available(iOS 9.0, *) {
+            item.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+        } else {
+            // Fallback on earlier versions
+        };
+        
+        item.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .New, context: &kCurrentItemContext)
+        item.addObserver(self, forKeyPath: "playbackBufferFull", options: .New, context: &kCurrentItemContext)
+        item.addObserver(self, forKeyPath: "playbackBufferEmpty", options: .New, context: &kCurrentItemContext)
+        item.addObserver(self, forKeyPath: "rate", options: .New, context: &kCurrentItemContext)
         player = AVPlayer(playerItem: item)
         playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        
+        
         
         setTimeObserver()
 
@@ -218,7 +237,31 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
     }
     
     
-    // delegate AVAssetResourceLoaderDelegate
+    func showLog() {
+        print("= REPORT =")
+
+        if let item = self.player.currentItem {
+            if let log = item.accessLog() {
+                if let lastevent = log.events.last {
+                    let lastObservedBitrate = lastevent.observedBitrate
+                    print("lastObservedBitrate \(lastObservedBitrate)")
+                }
+            }
+        }
+        
+        // loaded time ranges
+        if let loadedTimeRanges : [NSValue]  = self.player.currentItem?.loadedTimeRanges {
+            var str = ""
+            for v : NSValue in loadedTimeRanges {
+                let timeRange : CMTimeRange = v.CMTimeRangeValue
+                str = str + "(s:\(timeRange.start.seconds), du:\(timeRange.duration.seconds))"
+            }
+            print("loadedTimeRange:\(str)")
+        }
+        print("=====")
+    }
+    
+// MARK: Delegate AVAssetResourceLoaderDelegate
     
     func resourceLoader(resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         /*

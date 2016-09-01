@@ -8,18 +8,20 @@
 //
 
 import Foundation
+import AVFoundation
 
 
 protocol RDAVPlayerViewAPI {
     func setup()
     func updatePlay()
     func updatePause()
-    func updateSeekValue()
+    func updateSeekValue(item:AVPlayerItem)
 }
 
 enum RDAVPlayerPresenterEvent {
     case NotifyPlayButtonPushed
     case NotifySeekValueChanged(value:Float)
+    case NotifyUpdateTime(item:AVPlayerItem)
 }
 
 protocol  RDAVPlayerEventReceiver {
@@ -28,7 +30,7 @@ protocol  RDAVPlayerEventReceiver {
 
 // State manager
 class RDAVPlayerPresenter : RDAVPlayerEventReceiver {
-    let playerControl : RDAVPlayerAPI = RDAVPlayer.shareInstance
+    let playerAPI : RDAVPlayerAPI = RDAVPlayer.shareInstance
     let playerView : RDAVPlayerViewAPI
     
     let sampleURL = NSBundle.mainBundle().URLForResource("samplemovie", withExtension: "mov")!
@@ -39,16 +41,19 @@ class RDAVPlayerPresenter : RDAVPlayerEventReceiver {
     }
     
     func setup() {
-        playerControl.setupPlayer(sampleURL)
+        playerAPI.setupPlayer(sampleURL)
         playerView.setup()
+        playerAPI.addObserver(self)
     }
     
     func notify(event:RDAVPlayerPresenterEvent) {
         switch event {
         case .NotifyPlayButtonPushed:
-            playerControl.play()
+            playerAPI.play()
         case .NotifySeekValueChanged(value: let value):
-            playerControl.seek(value)
+            playerAPI.seek(value)
+        case .NotifyUpdateTime(item: let item):
+            playerView.updateSeekValue(item);
         }
     }
     

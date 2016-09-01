@@ -8,11 +8,16 @@
 //
 
 import UIKit
+import AVFoundation
+
+class RDControllerView : UIView {
+    @IBOutlet weak var slider : UISlider!
+}
 
 class RDPlayerView : UIView, RDAVPlayerViewAPI
 {
     @IBOutlet weak var consol: UITextView!
-    @IBOutlet weak var controllerView: UIView!
+    @IBOutlet weak var controllerView: RDControllerView!
     @IBOutlet weak var screenView: UIView!
     
     func setup()
@@ -30,8 +35,14 @@ class RDPlayerView : UIView, RDAVPlayerViewAPI
         print("updatePause")
     }
     
-    func updateSeekValue()
+    func updateSeekValue(item:AVPlayerItem)
     {
-        print("updateSeekValue")
+        let time = item.currentTime().seconds
+        let duration = item.duration.seconds
+        let percent = time / duration
+        dispatch_async(dispatch_get_main_queue(), {
+            self.controllerView.slider.value = Float(percent)
+            print("updateSeekValue")
+        })
     }
 }
