@@ -11,32 +11,6 @@
 import UIKit
 import AVFoundation
 
-class RDPlayerView : UIView, RDAVPlayerViewAPI
-{
-    @IBOutlet weak var consol: UITextView!
-    @IBOutlet weak var controllerView: UIView!
-    @IBOutlet weak var screenView: UIView!
-    
-    func setup()
-    {
-        
-    }
-    
-    func updatePlay()
-    {
-        print("updatePlay")
-    }
-    
-    func updatePause()
-    {
-        print("updatePause")
-    }
-    
-    func updateSeekValue()
-    {
-        print("updateSeekValue")
-    }
-}
 
 
 

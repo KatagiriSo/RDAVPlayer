@@ -21,6 +21,12 @@
 		324FE6FE1D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
 		324FE6FF1D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
 		324FE7001D61559A00EC0A2E /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 324FE6FD1D61559A00EC0A2E /* samplemovie.mov */; };
+		3299EE781D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE771D77FDEB00D94B3E /* RDAVPlayerPresenter.swift */; };
+		3299EE791D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE771D77FDEB00D94B3E /* RDAVPlayerPresenter.swift */; };
+		3299EE7A1D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE771D77FDEB00D94B3E /* RDAVPlayerPresenter.swift */; };
+		3299EE7C1D77FE9500D94B3E /* RDPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE7B1D77FE9500D94B3E /* RDPlayerView.swift */; };
+		3299EE7D1D77FE9500D94B3E /* RDPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE7B1D77FE9500D94B3E /* RDPlayerView.swift */; };
+		3299EE7E1D77FE9500D94B3E /* RDPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299EE7B1D77FE9500D94B3E /* RDPlayerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +63,8 @@
 		32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDAVPlayer.swift; sourceTree = "<group>"; };
 		32426D281D5AD10B00F0DC05 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		324FE6FD1D61559A00EC0A2E /* samplemovie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = samplemovie.mov; sourceTree = "<group>"; };
+		3299EE771D77FDEB00D94B3E /* RDAVPlayerPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDAVPlayerPresenter.swift; sourceTree = "<group>"; };
+		3299EE7B1D77FE9500D94B3E /* RDPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDPlayerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +120,9 @@
 				324FE6FD1D61559A00EC0A2E /* samplemovie.mov */,
 				32426CF61D5ABFE000F0DC05 /* AppDelegate.swift */,
 				32426CF81D5ABFE000F0DC05 /* ViewController.swift */,
+				3299EE7B1D77FE9500D94B3E /* RDPlayerView.swift */,
 				32426D241D5AC10000F0DC05 /* RDAVPlayer.swift */,
+				3299EE771D77FDEB00D94B3E /* RDAVPlayerPresenter.swift */,
 				32426CFA1D5ABFE100F0DC05 /* Main.storyboard */,
 				32426CFD1D5ABFE100F0DC05 /* Assets.xcassets */,
 				32426CFF1D5ABFE100F0DC05 /* LaunchScreen.storyboard */,
@@ -273,8 +283,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3299EE7C1D77FE9500D94B3E /* RDPlayerView.swift in Sources */,
 				32426CF91D5ABFE000F0DC05 /* ViewController.swift in Sources */,
 				32426D251D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
+				3299EE781D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */,
 				32426CF71D5ABFE000F0DC05 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +297,8 @@
 			files = (
 				32426D0C1D5ABFE100F0DC05 /* RDAVPlayerTests.swift in Sources */,
 				32426D261D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
+				3299EE791D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */,
+				3299EE7D1D77FE9500D94B3E /* RDPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +308,8 @@
 			files = (
 				32426D171D5ABFE100F0DC05 /* RDAVPlayerUITests.swift in Sources */,
 				32426D271D5AC10000F0DC05 /* RDAVPlayer.swift in Sources */,
+				3299EE7A1D77FDEB00D94B3E /* RDAVPlayerPresenter.swift in Sources */,
+				3299EE7E1D77FE9500D94B3E /* RDPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
