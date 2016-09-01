@@ -25,7 +25,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vj1-YQ-GUd" customClass="RDControllerView" customModule="RDAVPlayer" customModuleProvider="target">
                                 <rect key="frame" x="180" y="445" width="240" height="128"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="cS6-62-J8d">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="cS6-62-J8d">
                                         <rect key="frame" x="6" y="78" width="228" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="224" id="9Oj-aa-x4v"/>
@@ -44,7 +44,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="Cun-yI-TuC"/>
                                         </constraints>
-                                        <state key="normal" title="Play"/>
+                                        <state key="normal" title="&gt;"/>
                                         <connections>
                                             <action selector="playButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GW9-ya-XgQ"/>
                                         </connections>
@@ -66,6 +66,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
+                                    <outlet property="playButton" destination="c6z-lq-ph4" id="XGX-iD-DUx"/>
                                     <outlet property="slider" destination="cS6-62-J8d" id="8Qd-zG-RrN"/>
                                 </connections>
                             </view>

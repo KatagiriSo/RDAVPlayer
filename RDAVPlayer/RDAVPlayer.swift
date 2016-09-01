@@ -11,20 +11,11 @@ import Foundation
 import AVFoundation
 import UIKit
 
-
-
-protocol RDAVPlayerAPI {
-    func setupPlayer(url:NSURL)
-    func addObserver(observer:RDAVPlayerEventReceiver)
-    func play()
-    func seek(value:Float)
-}
-
 private var kCurrentItemContext : Int = 0
 
 
 /// control to AVPlayer
-class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
+class RDAVPlayer : NSObject, RDAVPlayerAPI, RDAVPlayerInfo , AVAssetResourceLoaderDelegate {
     
     var eventReceiver : RDAVPlayerEventReceiver? = nil
     var playerLayer:AVPlayerLayer!
@@ -160,6 +151,10 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         player.play()
     }
     
+    func pause() {
+        player.pause()
+    }
+    
     func seek(value:Float) {
         
         guard value >= 0 && value < 1 else {
@@ -235,6 +230,12 @@ class RDAVPlayer : NSObject, RDAVPlayerAPI, AVAssetResourceLoaderDelegate {
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
+//MARK: RDAVPlayerINFO
+    func isPlaying() -> Bool {
+        return self.player.rate > 0
+    }
+    
     
     
     func showLog() {

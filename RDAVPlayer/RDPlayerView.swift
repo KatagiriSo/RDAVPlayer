@@ -12,6 +12,7 @@ import AVFoundation
 
 class RDControllerView : UIView {
     @IBOutlet weak var slider : UISlider!
+    @IBOutlet weak var playButton : UIButton!
 }
 
 class RDPlayerView : UIView, RDAVPlayerViewAPI
@@ -28,11 +29,13 @@ class RDPlayerView : UIView, RDAVPlayerViewAPI
     func updatePlay()
     {
         print("updatePlay")
+        controllerView.playButton.setTitle("||", forState: UIControlState.Normal)
     }
     
     func updatePause()
     {
         print("updatePause")
+        controllerView.playButton.setTitle(">", forState: UIControlState.Normal)
     }
     
     func updateSeekValue(item:AVPlayerItem)
